@@ -1,0 +1,113 @@
+/* Filament Sidebar Orange Theme - Direct CSS File */
+
+:root {
+    --sidebar-bg: rgb(249, 115, 22);
+    --sidebar-bg-dark: rgb(15, 23, 42);
+    --sidebar-text: white;
+    --sidebar-hover: rgb(217, 119, 6);
+    --sidebar-active: rgb(217, 119, 6);
+    --sidebar-border: rgb(194, 65, 12);
+}
+
+/* Maximum specificity sidebar styling */
+html .fi-sidebar,
+html [data-filament-sidebar],
+body .fi-sidebar,
+body [data-filament-sidebar],
+.fi-sidebar,
+[data-filament-sidebar] {
+    background-color: rgb(249, 115, 22) !important;
+    background: rgb(249, 115, 22) !important;
+    background-image: none !important;
+}
+
+/* Dark mode sidebar */
+@media (prefers-color-scheme: dark) {
+    html .fi-sidebar,
+    html [data-filament-sidebar],
+    body .fi-sidebar,
+    body [data-filament-sidebar],
+    .fi-sidebar,
+    [data-filament-sidebar] {
+        background-color: rgb(15, 23, 42) !important;
+    }
+}
+
+/* Sidebar header border */
+.fi-sidebar-header,
+[data-filament-sidebar-header] {
+    border-bottom-color: rgb(194, 65, 12) !important;
+}
+
+/* Navigation items */
+.fi-sidebar-nav-item,
+[data-filament-sidebar-nav-item] {
+    color: white !important;
+    fill: white !important;
+}
+
+.fi-sidebar-nav-item:hover,
+[data-filament-sidebar-nav-item]:hover {
+    background-color: rgb(217, 119, 6) !important;
+    color: white !important;
+}
+
+/* Active navigation item */
+.fi-sidebar-nav-item[aria-current="page"],
+.fi-sidebar-nav-item.active,
+[data-filament-sidebar-nav-item][aria-current="page"],
+[data-filament-sidebar-nav-item].active {
+    background-color: rgb(217, 119, 6) !important;
+    color: white !important;
+    border-left-color: rgb(253, 186, 116) !important;
+    border-left-width: 4px !important;
+    border-left-style: solid !important;
+}
+
+/* Group labels */
+.fi-sidebar-nav-group-label {
+    color: rgb(254, 231, 217) !important;
+}
+
+/* Collapse button */
+.fi-sidebar-collapse-button {
+    color: white !important;
+}
+
+.fi-sidebar-collapse-button:hover {
+    background-color: rgb(217, 119, 6) !important;
+}
+
+/* Badge styling */
+.fi-sidebar-nav-item-badge {
+    background-color: rgb(253, 186, 116) !important;
+    color: rgb(92, 51, 23) !important;
+}
+
+/* Brand area */
+.fi-sidebar-brand {
+    color: white !important;
+}
+
+/* Focus states */
+.fi-sidebar-nav-item:focus-visible {
+    outline: 2px solid rgb(253, 186, 116) !important;
+}
+
+/* Ensure text remains white on orange background */
+.fi-sidebar-nav-item svg,
+.fi-sidebar-collapse-button svg {
+    fill: white !important;
+    color: white !important;
+}
+
+/* Link colors in sidebar */
+.fi-sidebar a,
+.fi-sidebar-nav-item a {
+    color: white !important;
+}
+
+.fi-sidebar a:hover,
+.fi-sidebar-nav-item a:hover {
+    color: white !important;
+}

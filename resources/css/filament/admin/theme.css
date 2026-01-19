@@ -1,0 +1,133 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+.fi-sidebar-nav {
+    background-color: Teal !important;
+}
+
+/* Navigation items - default state */
+.fi-sidebar-nav-item,
+.fi-sidebar-item,
+.fi-sidebar-item-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    color: white !important;
+    background: transparent !important;
+    border-left: 4px solid transparent !important;
+    border-radius: 6px;
+    transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.fi-sidebar-nav-item svg,
+.fi-sidebar-item svg,
+.fi-sidebar-item-button svg,
+.fi-sidebar-nav-item .fi-sidebar-item-icon,
+.fi-sidebar-item .fi-sidebar-item-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: white !important;
+    fill: white !important;
+}
+
+.fi-sidebar-nav-item span,
+.fi-sidebar-item span,
+.fi-sidebar-item-button span,
+.fi-sidebar-item-label {
+    color: white !important;
+}
+
+/* Active state */
+.fi-sidebar-nav-item.fi-active,
+.fi-sidebar-nav-item[aria-current="page"],
+.fi-sidebar-item.fi-active,
+.fi-sidebar-item[aria-current="page"],
+.fi-active > .fi-sidebar-item-button {
+    background-color: DarkCyan !important;
+    border-left-color: white !important;
+    color: white !important;
+    box-shadow: none !important;
+}
+
+.fi-sidebar-nav-item.fi-active svg,
+.fi-sidebar-nav-item[aria-current="page"] svg,
+.fi-sidebar-item.fi-active svg,
+.fi-sidebar-item[aria-current="page"] svg,
+.fi-active > .fi-sidebar-item-button svg {
+    color: white !important;
+    fill: white !important;
+}
+
+.fi-sidebar-nav-item:hover,
+.fi-sidebar-item:hover,
+.fi-sidebar-item-button:hover {
+    background-color: DarkCyan !important;
+    color: #fff !important;
+    transform: translateX(2px);
+    box-shadow: inset 0 0 6px rgba(255,255,255,0.2);
+}
+
+.fi-sidebar-nav-item:hover svg,
+.fi-sidebar-item:hover svg,
+.fi-sidebar-item-button:hover svg {
+    color: white !important;
+    fill: white !important;
+}
+
+/* Badge styling */
+.fi-sidebar-item-badge,
+.fi-badge,
+.fi-sidebar-nav-item .fi-badge {
+    background-color: #9b3928 !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 2px 6px !important;
+    border-radius: 9999px !important;
+    font-size: 0.75rem !important;
+}
+
+.fi-sidebar-group-label {
+    color: white !important;
+    opacity: 0.7;
+}
+
+.fi-header {
+    background-color: Teal !important;
+    color: #fff !important;
+    padding: 12px !important;
+    border-radius: 6px !important;
+}
+
+/* Force descendants (links, svgs, etc.) to inherit white text */
+.fi-header,
+.fi-header * {
+    color: #fff !important;
+}
+
+.fi-header a {
+    color: inherit !important;
+    text-decoration: none;
+}
+
+.fi-header svg {
+    fill: currentColor !important;
+}
+
+.fi-sidebar-header {
+    background-color: Teal !important;
+    padding: 16px !important;
+    border-bottom: none !important;
+}
+
+.fi-logo {
+    color: #fff !important;
+    font-weight: bold !important;
+    font-size: 1.25rem !important;
+    text-align: center !important;
+}
+
+
+
