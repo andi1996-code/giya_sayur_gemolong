@@ -116,15 +116,27 @@ timeout /t 1 /nobreak >nul
 :STEP6
 echo.
 echo ════════════════════════════════════════════════════════════════
-echo  STEP 6/8: Creating New Symbolic Link (Windows Format)
+echo  STEP 6/8: Creating Storage Link (Windows Format)
 echo ════════════════════════════════════════════════════════════════
+echo Trying symbolic link first...
 mklink /D "public\storage" "..\storage\app\public" >nul 2>&1
 if %errorlevel% equ 0 (
     echo [OK] Symbolic link created successfully
 ) else (
-    echo [WARNING] Failed to create symbolic link
-    echo You may need to run this as Administrator
-    echo Or enable Developer Mode in Windows Settings
+    echo [INFO] Symbolic link failed, trying directory junction...
+    mklink /J "public\storage" "..\storage\app\public" >nul 2>&1
+    if %errorlevel% equ 0 (
+        echo [OK] Directory junction created successfully
+    ) else (
+        echo [INFO] Junction failed, using PHP artisan storage:link...
+        php artisan storage:link >nul 2>&1
+        if %errorlevel% equ 0 (
+            echo [OK] Storage link created via artisan
+        ) else (
+            echo [WARNING] All methods failed!
+            echo Please run this file as Administrator (Right-click ^> Run as administrator)
+        )
+    )
 )
 timeout /t 1 /nobreak >nul
 
@@ -146,10 +158,12 @@ timeout /t 1 /nobreak >nul
 :STEP8
 echo.
 echo ════════════════════════════════════════════════════════════════
-echo  STEP 8/8: Caching Configuration
+echo  STEP 8/8: Rebuilding Configuration Cache
 echo ════════════════════════════════════════════════════════════════
 php artisan config:cache >nul 2>&1
 echo [OK] Configuration cached
+php artisan optimize >nul 2>&1
+echo [OK] Application optimized
 timeout /t 1 /nobreak >nul
 
 :SUCCESS

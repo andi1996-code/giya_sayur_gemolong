@@ -6,12 +6,33 @@ Jika upload gambar tidak berfungsi setelah deploy ke Laragon di komputer client,
 
 ## 🚀 Solusi Cepat (Otomatis)
 
-1. Buka folder `C:\laragon\www\pos_griya`
-2. Double-click file **`setup-laragon.bat`**
-3. Tunggu sampai selesai
-4. Test dengan buka: **http://pos_griya.test/test-storage.php**
-5. Pastikan semua check menunjukkan ✅ YES
-6. Coba upload gambar di aplikasi
+1. **Right-click** file **`INSTALL.bat`**
+2. Pilih **"Run as administrator"**
+3. Klik **"Yes"** pada UAC prompt
+4. Tunggu sampai selesai
+5. Test dengan buka: **http://pos_griya.test/test-storage.php**
+6. Pastikan semua check menunjukkan ✅ YES
+7. Coba upload gambar di aplikasi
+
+### ⚠️ Jika Symbolic Link Gagal
+
+Jika muncul **WARNING** pada STEP 6 (Symbolic Link):
+
+**Solusi A: Fix dengan Administrator**
+1. Right-click **`FIX-STORAGE-LINK.bat`**
+2. Pilih **"Run as administrator"**
+3. Test lagi
+
+**Solusi B: Enable Developer Mode**
+1. Buka **Windows Settings**
+2. **Privacy & Security** > **For developers**
+3. Aktifkan **"Developer Mode"**
+4. Restart komputer
+5. Jalankan `FIX-STORAGE-LINK.bat` lagi
+
+**Solusi C: Fallback (Copy Method)**
+- Jalankan: **`USE-COPY-STORAGE.bat`**
+- Upload akan bekerja, tapi perlu sync manual
 
 ## 🔧 Solusi Manual (Jika Otomatis Gagal)
 

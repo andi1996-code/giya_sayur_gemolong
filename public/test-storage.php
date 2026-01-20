@@ -46,6 +46,18 @@ echo "Is Link: " . (is_link($publicStorage) ? 'YES ✅' : 'NO ❌') . "<br>";
 if (is_link($publicStorage)) {
     echo "Target: " . readlink($publicStorage) . "<br>";
 }
+
+if (!file_exists($publicStorage)) {
+    echo "<br><div style='background: #ffe6e6; padding: 10px; border-left: 4px solid red;'>";
+    echo "<b>❌ STORAGE LINK TIDAK ADA!</b><br><br>";
+    echo "<b>Solusi:</b><br>";
+    echo "1. Close browser ini<br>";
+    echo "2. Right-click file <b>INSTALL.bat</b><br>";
+    echo "3. Pilih <b>Run as Administrator</b><br>";
+    echo "4. Tunggu sampai selesai<br>";
+    echo "5. Refresh halaman ini<br>";
+    echo "</div>";
+}
 echo "<hr>";
 
 // Test 4: Check actual storage/app/public

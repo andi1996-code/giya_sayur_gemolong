@@ -60,6 +60,13 @@ return [
             'report' => false,
         ],
 
+        'livewire' => [
+            'driver' => 'local',
+            'root' => storage_path('app/livewire-tmp'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
     ],
 
     /*

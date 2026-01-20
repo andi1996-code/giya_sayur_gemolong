@@ -7,27 +7,53 @@
 PILIHAN 1: INSTALLER LENGKAP (Recommended)
 ===========================================
 
-1. Double-click file:  INSTALL.bat
+1. Right-click file:  INSTALL.bat
 
-2. Ikuti step-by-step installer
+2. Pilih: "Run as administrator"
 
-3. Setelah selesai, buka: http://pos_griya.test/test-storage.php
+3. Ikuti step-by-step installer
 
-4. Pastikan semua check: YES ✅
+4. Setelah selesai, buka: http://pos_griya.test/test-storage.php
 
-5. Coba upload gambar
+5. Pastikan semua check: YES ✅
+
+6. Coba upload gambar
+
+
+JIKA SYMBOLIC LINK GAGAL (Muncul WARNING):
+==========================================
+
+1. Right-click file:  FIX-STORAGE-LINK.bat
+
+2. Pilih: "Run as administrator"
+
+3. Klik "Yes" pada UAC prompt
+
+4. Test lagi: http://pos_griya.test/test-storage.php
+
+
+SOLUSI TERAKHIR (Jika masih gagal):
+===================================
+
+1. Enable Windows Developer Mode:
+   - Buka Settings
+   - Privacy & Security > For developers
+   - Aktifkan "Developer Mode"
+   - Restart komputer
+   - Jalankan FIX-STORAGE-LINK.bat lagi
+
+2. Atau gunakan copy method:
+   - Jalankan: USE-COPY-STORAGE.bat
+   - Tidak ideal tapi akan bekerja
 
 
 PILIHAN 2: QUICK SETUP
 ======================
 
-1. Double-click file:  setup-laragon.bat
+1. Right-click file:  setup-laragon.bat
 
-2. Tunggu sampai "SETUP SELESAI!"
+2. Pilih: "Run as administrator"
 
-3. Test di: http://pos_griya.test/test-storage.php
-
-2. Screenshot hasilnya
 
 3. Kirim ke developer
 

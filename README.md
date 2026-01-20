@@ -80,6 +80,7 @@ Jika upload gambar **TIDAK berfungsi** saat deploy ke **Laragon** (padahal denga
 
 ### Solusi 1: Auto Installer (Recommended)
 ```cmd
+# Right-click > Run as administrator
 INSTALL.bat
 ```
 Installer akan:
@@ -88,10 +89,23 @@ Installer akan:
 - ✅ Buat ulang symbolic link dengan format Windows
 - ✅ Clear dan cache ulang konfigurasi Laravel
 
-### Solusi 2: Quick Setup
+### ⚠️ Jika Symbolic Link Gagal (Muncul WARNING)
+
+**PENTING:** Symbolic link memerlukan Administrator atau Developer Mode!
+
+**Fix Cepat:**
 ```cmd
-setup-laragon.bat
+# Right-click > Run as administrator
+FIX-STORAGE-LINK.bat
 ```
+
+**Solusi Permanent:**
+- Enable **Windows Developer Mode**
+- Settings > Privacy & Security > For developers
+- Aktifkan "Developer Mode"
+- Restart komputer
+
+📖 **Baca panduan lengkap:** [SYMBOLIC_LINK_FIX.md](SYMBOLIC_LINK_FIX.md)
 
 ### Test Upload Permission
 Setelah setup, buka: **http://pos_griya.test/test-storage.php**
@@ -99,13 +113,16 @@ Setelah setup, buka: **http://pos_griya.test/test-storage.php**
 - Jika ada yang **NO ❌**, jalankan `diagnostic-laragon.bat`
 
 ### File Helper yang Tersedia:
-| File | Fungsi |
-|------|--------|
-| `INSTALL.bat` | Installer lengkap dengan step-by-step |
-| `setup-laragon.bat` | Quick setup otomatis |
-| `diagnostic-laragon.bat` | Cek masalah dan diagnosa |
-| `SETUP_LARAGON.md` | Dokumentasi lengkap |
-| `BACA_DULU.txt` | Panduan singkat |
-| `public/test-storage.php` | Test permission via browser |
+| File | Fungsi | Run as Admin? |
+|------|--------|---------------|
+| `INSTALL.bat` | Installer lengkap dengan step-by-step | ✅ Ya |
+| `FIX-STORAGE-LINK.bat` | Fix symbolic link issue | ✅ Ya (Wajib) |
+| `setup-laragon.bat` | Quick setup otomatis | ✅ Recommended |
+| `diagnostic-laragon.bat` | Cek masalah dan diagnosa | ❌ Tidak |
+| `USE-COPY-STORAGE.bat` | Fallback: copy method | ❌ Tidak |
+| `SETUP_LARAGON.md` | Dokumentasi lengkap | - |
+| `SYMBOLIC_LINK_FIX.md` | Panduan fix symbolic link | - |
+| `BACA_DULU.txt` | Panduan singkat | - |
+| `public/test-storage.php` | Test permission via browser | - |
 
 Untuk detail lengkap, baca: **[SETUP_LARAGON.md](SETUP_LARAGON.md)**

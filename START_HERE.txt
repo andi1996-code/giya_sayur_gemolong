@@ -5,17 +5,28 @@
 
 Jika upload gambar ERROR di Laragon:
 
-1. Klik 2x file:  INSTALL.bat
+1. Right-click file:  INSTALL.bat
 
-2. Tunggu sampai selesai
+2. Pilih: "Run as administrator"
 
-3. Buka browser: http://pos_griya.test/test-storage.php
+3. Tunggu sampai selesai
 
-4. Pastikan semua: YES ✅
+4. Buka browser: http://pos_griya.test/test-storage.php
 
-5. Upload gambar sekarang berfungsi!
+5. Pastikan semua: YES ✅
 
 
-Sudah selesai? Hapus file ini dan test-storage.php
+JIKA SYMBOLIC LINK GAGAL:
+
+1. Right-click:  FIX-STORAGE-LINK.bat
+
+2. Pilih: "Run as administrator"
+
+3. Jika masih gagal, enable Developer Mode:
+   Settings > Privacy & Security > For developers
+   > Aktifkan "Developer Mode"
+
+
+Upload gambar sekarang berfungsi!
 
 ═══════════════════════════════════════════════════════════════
