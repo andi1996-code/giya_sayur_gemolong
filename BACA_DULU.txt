@@ -4,24 +4,28 @@
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 
-LANGKAH SINGKAT:
-================
+PILIHAN 1: INSTALLER LENGKAP (Recommended)
+===========================================
+
+1. Double-click file:  INSTALL.bat
+
+2. Ikuti step-by-step installer
+
+3. Setelah selesai, buka: http://pos_griya.test/test-storage.php
+
+4. Pastikan semua check: YES ✅
+
+5. Coba upload gambar
+
+
+PILIHAN 2: QUICK SETUP
+======================
 
 1. Double-click file:  setup-laragon.bat
 
-2. Tunggu sampai muncul "SETUP SELESAI!"
+2. Tunggu sampai "SETUP SELESAI!"
 
-3. Buka browser: http://pos_griya.test/test-storage.php
-
-4. Pastikan semua check menunjukkan: YES ✅
-
-5. Coba upload gambar di aplikasi POS
-
-
-JIKA MASIH ERROR:
-=================
-
-1. Double-click file:  diagnostic-laragon.bat
+3. Test di: http://pos_griya.test/test-storage.php
 
 2. Screenshot hasilnya
 

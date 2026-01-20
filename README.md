@@ -74,3 +74,38 @@ Perhatikan untuk menjalankan atau mensetup project ini.
 9. Login dengan email (admin@gmail.com) dan password (admin123)
 
 Aplikasi siap di gunakan....
+## 🔧 Troubleshooting Upload Gambar di Laragon
+
+Jika upload gambar **TIDAK berfungsi** saat deploy ke **Laragon** (padahal dengan `php artisan serve` berfungsi), jalankan salah satu dari:
+
+### Solusi 1: Auto Installer (Recommended)
+```cmd
+INSTALL.bat
+```
+Installer akan:
+- ✅ Membuat folder livewire-tmp yang diperlukan
+- ✅ Set permission storage dengan benar
+- ✅ Buat ulang symbolic link dengan format Windows
+- ✅ Clear dan cache ulang konfigurasi Laravel
+
+### Solusi 2: Quick Setup
+```cmd
+setup-laragon.bat
+```
+
+### Test Upload Permission
+Setelah setup, buka: **http://pos_griya.test/test-storage.php**
+- Semua check harus menunjukkan: **YES ✅**
+- Jika ada yang **NO ❌**, jalankan `diagnostic-laragon.bat`
+
+### File Helper yang Tersedia:
+| File | Fungsi |
+|------|--------|
+| `INSTALL.bat` | Installer lengkap dengan step-by-step |
+| `setup-laragon.bat` | Quick setup otomatis |
+| `diagnostic-laragon.bat` | Cek masalah dan diagnosa |
+| `SETUP_LARAGON.md` | Dokumentasi lengkap |
+| `BACA_DULU.txt` | Panduan singkat |
+| `public/test-storage.php` | Test permission via browser |
+
+Untuk detail lengkap, baca: **[SETUP_LARAGON.md](SETUP_LARAGON.md)**

@@ -1,0 +1,21 @@
+═══════════════════════════════════════════════════════════════
+                   QUICK START GUIDE
+              Upload Gambar Tidak Berfungsi?
+═══════════════════════════════════════════════════════════════
+
+Jika upload gambar ERROR di Laragon:
+
+1. Klik 2x file:  INSTALL.bat
+
+2. Tunggu sampai selesai
+
+3. Buka browser: http://pos_griya.test/test-storage.php
+
+4. Pastikan semua: YES ✅
+
+5. Upload gambar sekarang berfungsi!
+
+
+Sudah selesai? Hapus file ini dan test-storage.php
+
+═══════════════════════════════════════════════════════════════
