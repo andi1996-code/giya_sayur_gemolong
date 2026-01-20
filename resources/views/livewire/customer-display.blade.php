@@ -95,7 +95,11 @@
 
         <!-- Logo Display Area -->
         <div class="logo-display-area">
-            @if($storeLogo)
+            @if($customerDisplayImage)
+                <div class="logo-center">
+                    <img src="{{ $customerDisplayImage }}" alt="{{ $storeName }}">
+                </div>
+            @elseif($storeLogo)
                 <div class="logo-center">
                     <img src="{{ $storeLogo }}" alt="{{ $storeName }}">
                 </div>
@@ -506,10 +510,11 @@
     .logo-display-area {
         flex: 1;
         display: flex;
-        align-items: center;
+        align-items: stretch;
         justify-content: center;
-        padding: 40px;
+        padding: 0;
         background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+        overflow: hidden;
     }
 
     .logo-center {
@@ -517,21 +522,19 @@
         align-items: center;
         justify-content: center;
         width: 100%;
-        max-width: 500px;
-        padding: 40px;
+        height: 100%;
+        padding: 0;
     }
 
     .logo-center img {
         width: 100%;
-        height: auto;
-        max-height: 400px;
-        object-fit: contain;
-        filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
+        height: 100%;
+        object-fit: cover;
         transition: transform 0.3s ease;
     }
 
     .logo-center img:hover {
-        transform: scale(1.05);
+        transform: scale(1.02);
     }
 
     .logo-placeholder {

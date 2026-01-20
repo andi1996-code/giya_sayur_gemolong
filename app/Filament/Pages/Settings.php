@@ -69,6 +69,15 @@ class Settings extends Page implements HasForms
                             ->acceptedFileTypes(['image/png'])
                             ->helperText('Upload logo toko dalam format PNG')
                             ->columnSpanFull(),
+
+                        FileUpload::make('customer_display_image')
+                            ->label('Gambar Customer Display')
+                            ->disk('public')
+                            ->image()
+                            ->directory('customer-display')
+                            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/jpg'])
+                            ->helperText('Upload gambar untuk ditampilkan di kolom kiri customer display (PNG/JPG)')
+                            ->columnSpanFull(),
                     ])
                     ->columns(2),
 

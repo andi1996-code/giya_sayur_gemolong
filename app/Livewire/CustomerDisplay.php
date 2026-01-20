@@ -23,6 +23,7 @@ class CustomerDisplay extends Component
     public $storeName;
     public $storeAddress;
     public $storeLogo;
+    public $customerDisplayImage;
 
     #[On('public')]
     public function mount()
@@ -44,10 +45,12 @@ class CustomerDisplay extends Component
             $this->storeName = $setting->name ?? 'Nama Toko';
             $this->storeAddress = $setting->address ?? '';
             $this->storeLogo = $setting->logo ? asset('storage/' . $setting->logo) : null;
+            $this->customerDisplayImage = $setting->customer_display_image ? asset('storage/' . $setting->customer_display_image) : null;
         } else {
             $this->storeName = 'Nama Toko';
             $this->storeAddress = '';
             $this->storeLogo = null;
+            $this->customerDisplayImage = null;
         }
     }
 
