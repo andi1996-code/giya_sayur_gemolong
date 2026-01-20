@@ -6,7 +6,7 @@
             <!-- Logo/Title -->
             <div class="space-y-4">
                 <div class="bg-white rounded-full w-20 h-20 flex items-center justify-center border border-white/30 shadow-lg">
-                    <img src="{{ asset('storage/logos/01KC5MG15ZMY9TRYPKXTNPGTFT.png') }}" alt="Logo" class="w-16 h-16 rounded-full object-cover" loading="lazy">
+                    <img src="{{ asset('favicon.ico') }}" alt="Logo" class="w-16 h-16 rounded-full object-cover" loading="lazy">
                 </div>
                 <div>
                     <h1 class="text-4xl font-bold text-white">POS System</h1>
