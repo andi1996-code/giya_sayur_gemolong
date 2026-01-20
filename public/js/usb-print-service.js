@@ -203,7 +203,8 @@ function formatReceiptData(data) {
 
     receipt += '================================\n';
     receipt += ESC + 'a' + '\x00'; // Left alignment
-    receipt += '\n\n\n\n';
+    // Feed a little paper before cut (avoid excessive blank space)
+    receipt += '\n\n';
 
     // Cut paper command (handled by Python server)
     // Cash drawer command (handled by Python server)

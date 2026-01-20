@@ -174,7 +174,7 @@ async function printThermalReceipt(data) {
 
         receipt += "================================\n";
         receipt += "\x1B\x61\x00"; // Kembalikan ke rata kiri
-        receipt += "\n\n";
+        // Feed a little paper before cut (avoid excessive blank space)
         receipt += "\n\n";
 
         receipt += "\x1D\x56\x00"; // ESC/POS cut paper
