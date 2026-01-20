@@ -1,0 +1,56 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   SOLUSI UPLOAD GAMBAR TIDAK BERFUNGSI DI LARAGON            ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+LANGKAH SINGKAT:
+================
+
+1. Double-click file:  setup-laragon.bat
+   
+2. Tunggu sampai muncul "SETUP SELESAI!"
+
+3. Buka browser: http://pos_griya.test/test-storage.php
+   
+4. Pastikan semua check menunjukkan: YES ✅
+
+5. Coba upload gambar di aplikasi POS
+
+
+JIKA MASIH ERROR:
+=================
+
+1. Double-click file:  diagnostic-laragon.bat
+
+2. Screenshot hasilnya
+
+3. Kirim ke developer
+
+
+FILE-FILE PENTING:
+==================
+
+• setup-laragon.bat          → Script setup otomatis
+• diagnostic-laragon.bat     → Script cek masalah
+• SETUP_LARAGON.md           → Dokumentasi lengkap
+• test-storage.php (public/) → Test permission di browser
+
+
+CATATAN:
+========
+
+Masalah ini HANYA terjadi saat deploy ke Laragon.
+Dengan "php artisan serve" tidak ada masalah.
+
+Penyebabnya:
+- Folder livewire-tmp tidak ada
+- Symbolic link format Unix tidak bekerja di Windows
+- Permission storage belum di-set
+
+Setup script sudah memperbaiki semua masalah di atas.
+
+
+═══════════════════════════════════════════════════════════════
+        Script dibuat untuk POS Griya - Januari 2026
+═══════════════════════════════════════════════════════════════
