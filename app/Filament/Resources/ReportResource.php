@@ -60,7 +60,13 @@ class ReportResource extends Resource implements HasShieldPermissions
                     //     'pengeluaran' => 'heroicon-o-arrow-up-circle',
                     // ])
                     ->default('inflow')
-                    ->grouped(),
+                    ->grouped()
+                    ->reactive(),
+                    Forms\Components\Checkbox::make('simple_view')
+                        ->label('Laporan Singkat (hanya total per kategori)')
+                        ->helperText('Centang untuk menampilkan laporan tanpa detail produk')
+                        ->default(false)
+                        ->visible(fn ($get) => $get('report_type') === 'sales'),
                     Forms\Components\Grid::make(2)
                         ->schema([
                             Forms\Components\DatePicker::make('start_date')
@@ -142,11 +148,18 @@ class ReportResource extends Resource implements HasShieldPermissions
             ])
             ->actions([
                 Tables\Actions\Action::make('download')
-                ->label('Download') // Label di tombol
+                ->label('Download PDF') // Label di tombol
                 ->icon('heroicon-m-arrow-down-tray') // Icon download dari Heroicons
                 ->color('primary') // Warna tombol (biru)
                 ->url(fn ($record) => asset('storage/' . $record->path_file))
-                ->openUrlInNewTab(true), // Membuka URL di tab baru,
+                ->openUrlInNewTab(true), // Membuka URL di tab baru
+                Tables\Actions\Action::make('downloadExcel')
+                ->label('Download Excel')
+                ->icon('heroicon-m-document-arrow-down')
+                ->color('success')
+                ->url(fn ($record) => $record->excel_file ? asset('storage/' . $record->excel_file) : null)
+                ->openUrlInNewTab(true)
+                ->visible(fn ($record) => $record->report_type === 'sales' && $record->excel_file),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

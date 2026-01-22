@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Exports\SalesReportExport;
 use App\Models\CashFlow;
 use App\Models\Expense;
 use App\Models\Order;
@@ -10,6 +11,7 @@ use App\Models\Setting;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 
 class ReportObserver
@@ -99,7 +101,14 @@ class ReportObserver
                     'logo' => $logo,
                     'startDateTime' => $startDateTime,
                     'endDateTime' => $endDateTime,
+                    'simpleView' => $report->simple_view ?? false,
                 ])->setPaper('a4', 'portrait');
+
+                // Generate Excel untuk laporan penjualan
+                $excelFileName = $fileName . '.xlsx';
+                $excelPath = 'reports/' . $excelFileName;
+                Excel::store(new SalesReportExport($data, $report->simple_view ?? false, $fileName, $startDateTime, $endDateTime), $excelPath, 'public');
+                $report->excel_file = $excelPath;
             }
 
             // Pastikan folder 'storage/app/public/reports' ada
@@ -175,7 +184,14 @@ class ReportObserver
                     'logo' => $logo,
                     'startDateTime' => $startDateTime,
                     'endDateTime' => $endDateTime,
+                    'simpleView' => $report->simple_view ?? false,
                 ])->setPaper('a4', 'portrait');
+
+                // Generate Excel untuk laporan penjualan (update)
+                $excelFileName = $report->name . '.xlsx';
+                $excelPath = 'reports/' . $excelFileName;
+                Excel::store(new SalesReportExport($data, $report->simple_view ?? false, $report->name, $startDateTime, $endDateTime), $excelPath, 'public');
+                $report->excel_file = $excelPath;
             }
 
             // Pastikan folder 'storage/app/public/reports' ada
@@ -195,11 +211,18 @@ class ReportObserver
      */
     public function deleted(Report $report): void
     {
-        // Misal file PDF disimpan di storage/app/public/orders-pdf/{order_number}.pdf
+        // Hapus file PDF
         $pdfPath = 'public/reports/' . $report->name;
-
         if (Storage::exists($pdfPath)) {
             Storage::delete($pdfPath);
+        }
+
+        // Hapus file Excel jika ada
+        if ($report->excel_file) {
+            $excelPath = 'public/' . $report->excel_file;
+            if (Storage::exists($excelPath)) {
+                Storage::delete($excelPath);
+            }
         }
     }
 

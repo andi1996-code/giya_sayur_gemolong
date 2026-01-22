@@ -191,23 +191,17 @@ function formatReceiptData(data) {
 
     // Footer note
     if (data.store?.receipt_footer_note) {
-        receipt += '\n';
         receipt += data.store.receipt_footer_note + '\n';
     }
 
     // Thank you message
     if (data.store?.show_footer_thank_you !== false) {
-        receipt += '\n';
         receipt += '*** TERIMA KASIH ***\n';
     }
 
-    receipt += '================================\n';
+    receipt += '================================';
     receipt += ESC + 'a' + '\x00'; // Left alignment
-    // Feed a little paper before cut (avoid excessive blank space)
-    receipt += '\n\n';
-
-    // Cut paper command (handled by Python server)
-    // Cash drawer command (handled by Python server)
+    receipt += "\x1B\x70\x00\x3C\xFF"; // Buka cash drawer
 
     return receipt;
 }

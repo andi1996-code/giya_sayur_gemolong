@@ -162,21 +162,16 @@ async function printThermalReceipt(data) {
 
         // Footer note (jika ada)
         if (data.store.receipt_footer_note) {
-            receipt += "\n";
             receipt += data.store.receipt_footer_note + "\n";
         }
 
         // Thank you message (jika diaktifkan)
         if (data.store.show_footer_thank_you !== false) {
-            receipt += "\n";
             receipt += "*** TERIMA KASIH ***\n";
         }
 
-        receipt += "================================\n";
+        receipt += "================================";
         receipt += "\x1B\x61\x00"; // Kembalikan ke rata kiri
-        // Feed a little paper before cut (avoid excessive blank space)
-        receipt += "\n\n";
-
         receipt += "\x1D\x56\x00"; // ESC/POS cut paper
         receipt += "\x1B\x70\x00\x3C\xFF"; // Buka cash drawer
         await sendChunks(characteristic, encoder.encode(receipt));

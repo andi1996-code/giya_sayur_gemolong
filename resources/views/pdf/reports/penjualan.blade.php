@@ -80,27 +80,110 @@
     </header>
 
     <main>
-    <?php $total_Order_amount = 0?>
-    <?php $total_Profit_amount = 0?>
-        @foreach($data as $order)
+    <?php
+    $total_Order_amount = 0;
+    $total_Profit_amount = 0;
+
+    // Group transactions by category
+    $categoriesData = [];
+    foreach($data as $order) {
+        foreach($order->transactionItems as $item) {
+            $categoryName = $item->product->category->name ?? 'Tanpa Kategori';
+
+            if (!isset($categoriesData[$categoryName])) {
+                $categoriesData[$categoryName] = [
+                    'transactions' => [],
+                    'total_amount' => 0,
+                    'total_profit' => 0
+                ];
+            }
+
+            // Cek apakah transaksi sudah ada di kategori ini
+            $transactionKey = $order->id;
+            if (!isset($categoriesData[$categoryName]['transactions'][$transactionKey])) {
+                $categoriesData[$categoryName]['transactions'][$transactionKey] = [
+                    'order' => $order,
+                    'items' => [],
+                    'transaction_total' => 0,
+                    'transaction_profit' => 0
+                ];
+            }
+
+            // Tambahkan item ke transaksi
+            $categoriesData[$categoryName]['transactions'][$transactionKey]['items'][] = $item;
+            $itemTotal = $item->price * $item->quantity;
+            $categoriesData[$categoryName]['transactions'][$transactionKey]['transaction_total'] += $itemTotal;
+            $categoriesData[$categoryName]['transactions'][$transactionKey]['transaction_profit'] += $item->total_profit;
+
+            $categoriesData[$categoryName]['total_amount'] += $itemTotal;
+            $categoriesData[$categoryName]['total_profit'] += $item->total_profit;
+
+            $total_Order_amount += $itemTotal;
+            $total_Profit_amount += $item->total_profit;
+        }
+    }
+    ?>
+
+    @if($simpleView ?? false)
+        {{-- VERSI SINGKAT: Hanya tampil No Transaksi, Jenis Pembayaran, Total per Kategori --}}
+        @foreach($categoriesData as $categoryName => $categoryData)
         <table>
             <thead>
                 <tr>
-                    <th colspan="4" style="background-color:yellow; color:black;">No.Transaksi: {{ $order->transaction_number }}</th>
-                    <th colspan="2" style="background-color:yellow; color:black;">Pembayaran: {{ $order->paymentMethod->name }}</th>
+                    <th colspan="4" style="background-color:#4CAF50; color:white; font-size:14px">
+                        KATEGORI: {{ strtoupper($categoryName) }}
+                    </th>
                 </tr>
                 <tr>
-                    <th>Produk</th>
-                    <th>Harga Modal</th>
-                    <th>Harga Jual</th>
-                    <th>Qty</th>
+                    <th>No. Transaksi</th>
+                    <th>Jenis Pembayaran</th>
                     <th>Total Bayar</th>
                     <th>Total Profit</th>
                 </tr>
             </thead>
             <tbody>
-                <?php $total_profit_amount = 0 ?>
-                @foreach($order->transactionItems as $item)
+                @foreach($categoryData['transactions'] as $transaction)
+                <tr>
+                    <td>{{ $transaction['order']->transaction_number }}</td>
+                    <td>{{ $transaction['order']->paymentMethod->name }}</td>
+                    <td>Rp {{ number_format($transaction['transaction_total'], 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($transaction['transaction_profit'], 0, ',', '.') }}</td>
+                </tr>
+                @endforeach
+                <tr style="background-color:#E8F5E9;">
+                    <td colspan="2"><strong>SUBTOTAL KATEGORI</strong></td>
+                    <td><strong>Rp {{ number_format($categoryData['total_amount'], 0, ',', '.') }}</strong></td>
+                    <td><strong>Rp {{ number_format($categoryData['total_profit'], 0, ',', '.') }}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+        @endforeach
+    @else
+        {{-- VERSI DETAIL: Tampil dengan detail produk per kategori --}}
+        @foreach($categoriesData as $categoryName => $categoryData)
+        <div style="margin-bottom: 30px;">
+            <h2 style="background-color:#4CAF50; color:white; padding:10px; margin-bottom:0;">
+                KATEGORI: {{ strtoupper($categoryName) }}
+            </h2>
+
+            @foreach($categoryData['transactions'] as $transaction)
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="4" style="background-color:yellow; color:black;">No.Transaksi: {{ $transaction['order']->transaction_number }}</th>
+                        <th colspan="2" style="background-color:yellow; color:black;">Pembayaran: {{ $transaction['order']->paymentMethod->name }}</th>
+                    </tr>
+                    <tr>
+                        <th>Produk</th>
+                        <th>Harga Modal</th>
+                        <th>Harga Jual</th>
+                        <th>Qty</th>
+                        <th>Total Bayar</th>
+                        <th>Total Profit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($transaction['items'] as $item)
                     <tr>
                         <td>{{ $item->product->name }}</td>
                         <td>Rp {{ number_format($item->cost_price, 0, ',', '.') }}</td>
@@ -115,26 +198,57 @@
                         <td>Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
                         <td>Rp {{ number_format($item->total_profit, 0, ',', '.') }}</td>
                     </tr>
-                    <?php $total_profit_amount += $item->total_profit ?>
-                @endforeach
+                    @endforeach
                     <tr>
-                        <td colspan="4">Total</td>
-                        <td>Rp {{ number_format( $order->total, 0, ',', '.') }}</td>
-                        <td>Rp {{ number_format( $total_profit_amount, 0, ',', '.') }}</td>
+                        <td colspan="4">Total Transaksi</td>
+                        <td>Rp {{ number_format($transaction['transaction_total'], 0, ',', '.') }}</td>
+                        <td>Rp {{ number_format($transaction['transaction_profit'], 0, ',', '.') }}</td>
                     </tr>
-            </tbody>
-        </table>
-        <?php $total_Order_amount += $order->total ?>
-        <?php $total_Profit_amount += $total_profit_amount ?>
-        @endforeach
+                </tbody>
+            </table>
+            @endforeach
 
-        <table>
+            {{-- Subtotal per kategori --}}
+            <table style="margin-top: 10px;">
+                <thead>
+                    <tr>
+                        <th colspan="2" style="background-color:#E8F5E9; color:black; font-size:14px">
+                            SUBTOTAL KATEGORI {{ strtoupper($categoryName) }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background-color:#E8F5E9;">
+                        <td style="text-align:left; padding-left:20px;"><strong>Total Uang Masuk:</strong></td>
+                        <td><strong>Rp {{ number_format($categoryData['total_amount'], 0, ',', '.') }}</strong></td>
+                    </tr>
+                    <tr style="background-color:#E8F5E9;">
+                        <td style="text-align:left; padding-left:20px;"><strong>Total Keuntungan:</strong></td>
+                        <td><strong>Rp {{ number_format($categoryData['total_profit'], 0, ',', '.') }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        @endforeach
+    @endif
+
+        {{-- Total Keseluruhan --}}
+        <table style="margin-top: 20px;">
             <thead>
                 <tr>
-                    <th style="background-color:white; color:black; font-size:16px">Total Uang Masuk: Rp {{ number_format( $total_Order_amount, 0, ',', '.') }}</th>
-                    <th style="background-color:white; color:black; font-size:16px">Total Keuntungan: Rp {{ number_format( $total_Profit_amount, 0, ',', '.') }}</th>
+                    <th colspan="2" style="background-color:#2196F3; color:white; font-size:16px">TOTAL KESELURUHAN</th>
                 </tr>
             </thead>
+            <tbody>
+                <tr>
+                    <td style="background-color:white; color:black; font-size:16px"><strong>Total Uang Masuk:</strong></td>
+                    <td style="background-color:white; color:black; font-size:16px"><strong>Rp {{ number_format($total_Order_amount, 0, ',', '.') }}</strong></td>
+                </tr>
+                <tr>
+                    <td style="background-color:white; color:black; font-size:16px"><strong>Total Keuntungan:</strong></td>
+                    <td style="background-color:white; color:black; font-size:16px"><strong>Rp {{ number_format($total_Profit_amount, 0, ',', '.') }}</strong></td>
+                </tr>
+            </tbody>
         </table>
     </main>
 

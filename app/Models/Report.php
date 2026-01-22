@@ -10,11 +10,12 @@ class Report extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'report_type', 'start_date', 'start_time', 'end_date', 'end_time', 'path_file'];
+    protected $fillable = ['name', 'report_type', 'simple_view', 'start_date', 'start_time', 'end_date', 'end_time', 'path_file', 'excel_file'];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'simple_view' => 'boolean',
     ];
 }
 
