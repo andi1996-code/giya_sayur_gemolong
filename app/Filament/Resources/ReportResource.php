@@ -151,13 +151,13 @@ class ReportResource extends Resource implements HasShieldPermissions
                 ->label('Download PDF') // Label di tombol
                 ->icon('heroicon-m-arrow-down-tray') // Icon download dari Heroicons
                 ->color('primary') // Warna tombol (biru)
-                ->url(fn ($record) => asset('storage/' . $record->path_file))
+                ->url(fn ($record) => route('reports.download', ['id' => $record->id]))
                 ->openUrlInNewTab(true), // Membuka URL di tab baru
                 Tables\Actions\Action::make('downloadExcel')
                 ->label('Download Excel')
                 ->icon('heroicon-m-document-arrow-down')
                 ->color('success')
-                ->url(fn ($record) => $record->excel_file ? asset('storage/' . $record->excel_file) : null)
+                ->url(fn ($record) => $record->excel_file ? route('reports.download-excel', ['id' => $record->id]) : null)
                 ->openUrlInNewTab(true)
                 ->visible(fn ($record) => $record->report_type === 'sales' && $record->excel_file),
                 Tables\Actions\EditAction::make(),

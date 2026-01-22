@@ -23,6 +23,38 @@ Route::get('/supplier-debt/{id}/note', function ($id) {
     return SupplierDebtNoteService::download($supplierDebt);
 })->name('supplier-debt.note')->middleware(['auth']);
 
+// Download Report PDF with proper headers
+Route::get('/reports/{id}/download', function ($id) {
+    $report = \App\Models\Report::findOrFail($id);
+    $filePath = storage_path('app/public/' . $report->path_file);
+
+    if (!file_exists($filePath)) {
+        abort(404, 'File not found');
+    }
+
+    return response()->download($filePath, basename($filePath), [
+        'Content-Type' => 'application/pdf',
+        'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
+    ]);
+})->name('reports.download')->middleware(['auth']);
+
+// Download Report Excel with proper headers
+Route::get('/reports/{id}/download-excel', function ($id) {
+    $report = \App\Models\Report::findOrFail($id);
+
+    if (!$report->excel_file) {
+        abort(404, 'Excel file not found');
+    }
+
+    $filePath = storage_path('app/public/' . $report->excel_file);
+
+    if (!file_exists($filePath)) {
+        abort(404, 'File not found');
+    }
+
+    return response()->download($filePath, basename($filePath));
+})->name('reports.download-excel')->middleware(['auth']);
+
 // Customer Display for POS (Real-time sync without authentication)
 Route::get('/pos/customer-display', \App\Livewire\CustomerDisplay::class)->name('pos.customer-display');
 
