@@ -63,10 +63,18 @@ class ReportObserver
                     ->where('updated_at', '<=', $endDateTime)
                     ->get();
 
+                // Ambil data transaksi untuk payment method summary
+                $transactions = Transaction::query()
+                    ->with('paymentMethod')
+                    ->where('updated_at', '>=', $startDateTime)
+                    ->where('updated_at', '<=', $endDateTime)
+                    ->get();
+
                 // Generate PDF
                 $pdf = Pdf::loadView('pdf.reports.pemasukan', [
                     'fileName' => $fileName,
                     'data' => $data,
+                    'transactions' => $transactions,
                     'logo' => $logo,
                     'startDateTime' => $startDateTime,
                     'endDateTime' => $endDateTime,
@@ -146,10 +154,18 @@ class ReportObserver
                     ->where('updated_at', '<=', $endDateTime)
                     ->get();
 
+                // Ambil data transaksi untuk payment method summary
+                $transactions = Transaction::query()
+                    ->with('paymentMethod')
+                    ->where('updated_at', '>=', $startDateTime)
+                    ->where('updated_at', '<=', $endDateTime)
+                    ->get();
+
                 // Generate PDF
                 $pdf = Pdf::loadView('pdf.reports.pemasukan', [
                     'fileName' => $report->name,
                     'data' => $data,
+                    'transactions' => $transactions,
                     'logo' => $logo,
                     'startDateTime' => $startDateTime,
                     'endDateTime' => $endDateTime,

@@ -80,7 +80,19 @@
     </header>
 
     <main>
-    <?php $total_Order_amount = 0?>
+    <?php
+    $total_Order_amount = 0;
+
+    // Group by source untuk summary
+    $summaryBySource = [];
+    foreach($data as $d) {
+        $sourceLabel = app(App\Services\CashFlowLabelService::class)->getSourceLabel($d->type, $d->source);
+        if (!isset($summaryBySource[$sourceLabel])) {
+            $summaryBySource[$sourceLabel] = 0;
+        }
+        $summaryBySource[$sourceLabel] += $d->amount;
+    }
+    ?>
         <table>
             <thead>
                 <tr>
@@ -105,10 +117,31 @@
             </tbody>
         </table>
 
+        {{-- Summary per Sumber --}}
         <table>
             <thead>
                 <tr>
-                    <th colspan="5" style="background-color:white; color:black; font-size:16px">Total Keseluruhan: Rp {{ number_format( $total_Order_amount, 0, ',', '.') }}</th>
+                    <th colspan="2" style="background-color:#FF9800; color:white; font-size:14px">RINGKASAN PER KATEGORI PENGELUARAN</th>
+                </tr>
+                <tr>
+                    <th>Kategori</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($summaryBySource as $source => $amount)
+                <tr>
+                    <td style="text-align:left; padding-left:10px;">{{ $source }}</td>
+                    <td>Rp {{ number_format($amount, 0, ',', '.') }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="5" style="background-color:#F44336; color:white; font-size:16px">Total Keseluruhan: Rp {{ number_format( $total_Order_amount, 0, ',', '.') }}</th>
                 </tr>
             </thead>
         </table>

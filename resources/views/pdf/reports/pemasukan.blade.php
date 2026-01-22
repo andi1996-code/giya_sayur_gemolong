@@ -80,7 +80,52 @@
     </header>
 
     <main>
-    <?php $total_Order_amount = 0?>
+    <?php
+    $total_Order_amount = 0;
+
+    // Group by source untuk summary
+    $summaryBySource = [];
+    foreach($data as $d) {
+        $sourceLabel = app(App\Services\CashFlowLabelService::class)->getSourceLabel($d->type, $d->source);
+        if (!isset($summaryBySource[$sourceLabel])) {
+            $summaryBySource[$sourceLabel] = 0;
+        }
+        $summaryBySource[$sourceLabel] += $d->amount;
+    }
+
+    // Group by payment method untuk summary transaksi penjualan
+    $summaryByPaymentMethod = [];
+    $totalTransactions = 0;
+    $transactionCount = 0;
+
+    if(isset($transactions) && $transactions->count() > 0) {
+        foreach($transactions as $transaction) {
+            $transactionCount++;
+
+            // Debug: Cek apakah ada payment_method_id
+            if ($transaction->payment_method_id) {
+                // Load paymentMethod jika belum ter-load
+                if (!$transaction->relationLoaded('paymentMethod')) {
+                    $transaction->load('paymentMethod');
+                }
+
+                if ($transaction->paymentMethod) {
+                    $paymentMethodName = $transaction->paymentMethod->name;
+                } else {
+                    $paymentMethodName = 'Metode ID: ' . $transaction->payment_method_id . ' (Tidak Ditemukan)';
+                }
+            } else {
+                $paymentMethodName = 'Tidak Ada Metode';
+            }
+
+            if (!isset($summaryByPaymentMethod[$paymentMethodName])) {
+                $summaryByPaymentMethod[$paymentMethodName] = 0;
+            }
+            $summaryByPaymentMethod[$paymentMethodName] += $transaction->total;
+            $totalTransactions += $transaction->total;
+        }
+    }
+    ?>
         <table>
             <thead>
                 <tr>
@@ -105,10 +150,60 @@
             </tbody>
         </table>
 
+        {{-- Summary per Metode Pembayaran (Transaksi Penjualan) --}}
+        @if(!empty($summaryByPaymentMethod))
         <table>
             <thead>
                 <tr>
-                    <th colspan="5" style="background-color:white; color:black; font-size:16px">Total Keseluruhan: Rp {{ number_format( $total_Order_amount, 0, ',', '.') }}</th>
+                    <th colspan="2" style="background-color:#9C27B0; color:white; font-size:14px">
+                        RINGKASAN PER METODE PEMBAYARAN ({{ $transactionCount }} Transaksi Penjualan)
+                    </th>
+                </tr>
+                <tr>
+                    <th>Metode Pembayaran</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($summaryByPaymentMethod as $method => $amount)
+                <tr>
+                    <td style="text-align:left; padding-left:10px;">{{ $method }}</td>
+                    <td>Rp {{ number_format($amount, 0, ',', '.') }}</td>
+                </tr>
+                @endforeach
+                <tr style="background-color:#E1BEE7; font-weight:bold;">
+                    <td style="text-align:left; padding-left:10px;">TOTAL PENJUALAN</td>
+                    <td>Rp {{ number_format($totalTransactions, 0, ',', '.') }}</td>
+                </tr>
+            </tbody>
+        </table>
+        @endif
+
+        {{-- Summary per Sumber/Metode --}}
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2" style="background-color:#4CAF50; color:white; font-size:14px">RINGKASAN PER SUMBER</th>
+                </tr>
+                <tr>
+                    <th>Sumber</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($summaryBySource as $source => $amount)
+                <tr>
+                    <td style="text-align:left; padding-left:10px;">{{ $source }}</td>
+                    <td>Rp {{ number_format($amount, 0, ',', '.') }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="5" style="background-color:#2196F3; color:white; font-size:16px">Total Keseluruhan: Rp {{ number_format( $total_Order_amount, 0, ',', '.') }}</th>
                 </tr>
             </thead>
         </table>
