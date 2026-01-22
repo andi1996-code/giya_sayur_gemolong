@@ -98,6 +98,7 @@ class ReportObserver
             } else {
                 // Ambil data Sales sesuai start_date/time dan end_date/time
                  $data = Transaction::query()
+                    ->with(['transactionItems.product.category', 'paymentMethod'])
                     ->where('updated_at', '>=', $startDateTime)
                     ->where('updated_at', '<=', $endDateTime)
                     ->get();
@@ -189,6 +190,7 @@ class ReportObserver
             } else {
                 // Ambil data Sales sesuai start_date/time dan end_date/time
                  $data = Transaction::query()
+                    ->with(['transactionItems.product.category', 'paymentMethod'])
                     ->where('updated_at', '>=', $startDateTime)
                     ->where('updated_at', '<=', $endDateTime)
                     ->get();

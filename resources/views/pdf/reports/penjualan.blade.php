@@ -88,6 +88,11 @@
     $categoriesData = [];
     foreach($data as $order) {
         foreach($order->transactionItems as $item) {
+            // Skip items dengan product yang null (produk sudah dihapus)
+            if (!$item->product) {
+                continue;
+            }
+
             $categoryName = $item->product->category->name ?? 'Tanpa Kategori';
 
             if (!isset($categoriesData[$categoryName])) {
@@ -145,7 +150,7 @@
                 @foreach($categoryData['transactions'] as $transaction)
                 <tr>
                     <td>{{ $transaction['order']->transaction_number }}</td>
-                    <td>{{ $transaction['order']->paymentMethod->name }}</td>
+                    <td>{{ $transaction['order']->paymentMethod->name ?? 'Tidak Ada' }}</td>
                     <td>Rp {{ number_format($transaction['transaction_total'], 0, ',', '.') }}</td>
                     <td>Rp {{ number_format($transaction['transaction_profit'], 0, ',', '.') }}</td>
                 </tr>
@@ -171,7 +176,7 @@
                 <thead>
                     <tr>
                         <th colspan="4" style="background-color:yellow; color:black;">No.Transaksi: {{ $transaction['order']->transaction_number }}</th>
-                        <th colspan="2" style="background-color:yellow; color:black;">Pembayaran: {{ $transaction['order']->paymentMethod->name }}</th>
+                        <th colspan="2" style="background-color:yellow; color:black;">Pembayaran: {{ $transaction['order']->paymentMethod->name ?? 'Tidak Ada' }}</th>
                     </tr>
                     <tr>
                         <th>Produk</th>
@@ -184,6 +189,7 @@
                 </thead>
                 <tbody>
                     @foreach($transaction['items'] as $item)
+                    @if($item->product)
                     <tr>
                         <td>{{ $item->product->name }}</td>
                         <td>Rp {{ number_format($item->cost_price, 0, ',', '.') }}</td>
@@ -198,6 +204,7 @@
                         <td>Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
                         <td>Rp {{ number_format($item->total_profit, 0, ',', '.') }}</td>
                     </tr>
+                    @endif
                     @endforeach
                     <tr>
                         <td colspan="4">Total Transaksi</td>

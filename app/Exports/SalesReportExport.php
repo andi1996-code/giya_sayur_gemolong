@@ -67,6 +67,11 @@ class SalesReportExport implements FromArray, WithHeadings, WithStyles, WithTitl
         // Group data by category
         foreach($this->data as $order) {
             foreach($order->transactionItems as $item) {
+                // Skip items dengan product yang null (produk sudah dihapus)
+                if (!$item->product) {
+                    continue;
+                }
+
                 $categoryName = $item->product->category->name ?? 'Tanpa Kategori';
                 $transactionKey = $order->id;
 
@@ -131,7 +136,7 @@ class SalesReportExport implements FromArray, WithHeadings, WithStyles, WithTitl
                 foreach($categoryData['transactions'] as $transaction) {
                     $rows[] = [
                         $transaction['order']->transaction_number,
-                        $transaction['order']->paymentMethod->name,
+                        $transaction['order']->paymentMethod->name ?? 'Tidak Ada',
                         $transaction['transaction_total'],
                         $transaction['transaction_profit']
                     ];
@@ -185,7 +190,7 @@ class SalesReportExport implements FromArray, WithHeadings, WithStyles, WithTitl
                         $transaction['order']->transaction_number,
                         '',
                         'Pembayaran:',
-                        $transaction['order']->paymentMethod->name
+                        $transaction['order']->paymentMethod->name ?? 'Tidak Ada'
                     ];
                     $this->styleInfo['transaction_headers'][] = $currentRow++;
 
@@ -204,6 +209,11 @@ class SalesReportExport implements FromArray, WithHeadings, WithStyles, WithTitl
 
                     // Item Rows
                     foreach($transaction['items'] as $item) {
+                        // Skip items dengan product yang null
+                        if (!$item->product) {
+                            continue;
+                        }
+
                         $qty = $item->weight
                             ? number_format($item->weight, 3, ',', '.') . ' kg'
                             : $item->quantity;
