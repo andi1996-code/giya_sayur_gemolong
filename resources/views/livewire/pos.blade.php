@@ -135,7 +135,7 @@
                                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
                                 <input type="text" id="search-product" wire:model.live="search"
-                                    placeholder="Ketik nama produk atau kode..."
+                                    placeholder="Ketik nama, kode, atau barcode produk..."
                                     class="w-full pl-9 sm:pl-10 pr-4 py-2 sm:py-2 rounded-lg border border-purple-300 dark:border-purple-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800 transition-all duration-200">
                             </div>
                         </div>
@@ -168,6 +168,11 @@
                                     <h4 class="text-xs font-semibold text-gray-800 dark:text-white line-clamp-2 mb-1">
                                         {{ $product->name }}
                                     </h4>
+                                    @if ($product->barcode)
+                                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mb-1 font-mono">
+                                            {{ $product->barcode }}
+                                        </p>
+                                    @endif
                                     <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
                                         Rp {{ number_format($product->price, 0, ',', '.') }}
                                     </p>

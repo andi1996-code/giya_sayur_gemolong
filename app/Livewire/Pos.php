@@ -113,7 +113,8 @@ class Pos extends Component
                 })
                 ->where(function ($query) {
                     return $query->where('name', 'LIKE', '%' . $this->search . '%')
-                        ->orWhere('sku', 'LIKE', '%' . $this->search . '%');
+                        ->orWhere('sku', 'LIKE', '%' . $this->search . '%')
+                        ->orWhere('barcode', 'LIKE', '%' . $this->search . '%');
                 })
                 ->paginate($this->perPage)
         ]);
