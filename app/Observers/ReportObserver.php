@@ -50,7 +50,7 @@ class ReportObserver
 
             // Buat nama file dan path
             $fileName = 'LAPORAN-' . $today . '-' . str_pad($countToday, 2, '0', STR_PAD_LEFT);
-            $path = 'reports/' . $fileName;
+            $path = 'reports/' . $fileName . '.pdf';
 
             // Build datetime dengan filter jam
             $startDateTime = $this->buildDateTime($report->start_date, $report->start_time, false);
@@ -142,7 +142,7 @@ class ReportObserver
     {
             $logo = Setting::first()->logo;
             // Buat nama file dan path
-            $path = 'reports/' . $report->name;
+            $path = 'reports/' . $report->name . '.pdf';
 
             // Build datetime dengan filter jam
             $startDateTime = $this->buildDateTime($report->start_date, $report->start_time, false);
