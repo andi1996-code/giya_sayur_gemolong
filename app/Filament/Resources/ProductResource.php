@@ -13,6 +13,7 @@ use Filament\Actions\Action;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rules\Unique;
 use App\Filament\Resources\ProductResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -147,7 +148,15 @@ class ProductResource extends Resource implements HasShieldPermissions
                     ->label('Kode Barcode')
                     ->numeric()
                     ->helperText('jika tidak diisi akan di generate otomatis')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->rules([
+                        'nullable',
+                        fn(): Unique => (new Unique('products', 'barcode'))
+                            ->ignore($this->record?->id),
+                    ])
+                    ->validationMessages([
+                        'unique' => 'Kode barcode ini sudah digunakan oleh produk lain. Gunakan kode yang unik.',
+                    ]),
                 Forms\Components\Toggle::make('is_active')
                     ->label('Produk Aktif')
                     ->required(),
