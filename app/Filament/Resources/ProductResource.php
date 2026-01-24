@@ -279,6 +279,15 @@ class ProductResource extends Resource implements HasShieldPermissions
                         true: fn($query) => $query->where('is_reward', true),
                         false: fn($query) => $query->where('is_reward', false),
                     ),
+                Tables\Filters\TernaryFilter::make('is_active')
+                    ->label('Status Produk')
+                    ->placeholder('Semua Produk')
+                    ->trueLabel('Hanya Aktif')
+                    ->falseLabel('Hanya Non-Aktif')
+                    ->queries(
+                        true: fn($query) => $query->where('is_active', true),
+                        false: fn($query) => $query->where('is_active', false),
+                    ),
             ])
             ->actions([
                 Tables\Actions\Action::make('Reset Stok')
