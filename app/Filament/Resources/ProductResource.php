@@ -149,11 +149,7 @@ class ProductResource extends Resource implements HasShieldPermissions
                     ->numeric()
                     ->helperText('jika tidak diisi akan di generate otomatis')
                     ->maxLength(255)
-                    ->rules([
-                        'nullable',
-                        fn(): Unique => (new Unique('products', 'barcode'))
-                            ->ignore($this->record?->id),
-                    ])
+                    ->unique('products', 'barcode', ignoreRecord: true)
                     ->validationMessages([
                         'unique' => 'Kode barcode ini sudah digunakan oleh produk lain. Gunakan kode yang unik.',
                     ]),
