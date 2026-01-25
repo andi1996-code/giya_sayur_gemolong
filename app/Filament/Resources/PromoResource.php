@@ -80,6 +80,11 @@ class PromoResource extends Resource
                             ->type('text')
                             ->default('1')
                             ->rules(['required', 'regex:/^[0-9]*[.,]?[0-9]*$/'])
+                            ->formatStateUsing(fn ($state, Forms\Get $get) =>
+                                $get('trigger_unit') === 'qty'
+                                    ? number_format(floatval($state), 0, ',', '.')
+                                    : $state
+                            )
                             ->mutateDehydratedStateUsing(function ($state) {
                                 // Parse number, handling both dot and comma as decimal separator
                                 $state = trim($state);
@@ -92,7 +97,11 @@ class PromoResource extends Resource
 
                                 return $parsed;
                             })
-                            ->helperText('Masukkan dalam satuan kg (contoh: 1 untuk 1 kg, 0.5 untuk 0.5 kg)'),
+                            ->helperText(fn (Forms\Get $get) =>
+                                $get('trigger_unit') === 'kg'
+                                    ? 'Masukkan dalam satuan kg (contoh: 1 untuk 1 kg, 0.5 untuk 0.5 kg)'
+                                    : 'Masukkan jumlah item (contoh: 12 untuk 12 item)'
+                            ),
                         Forms\Components\ToggleButtons::make('trigger_unit')
                             ->label('Unit Pembelian')
                             ->options([
@@ -149,6 +158,9 @@ class PromoResource extends Resource
                             ->label('Jumlah Produk Gratis')
                             ->type('text')
                             ->rules(['nullable', 'regex:/^[0-9]*[.,]?[0-9]*$/'])
+                            ->formatStateUsing(fn ($state) =>
+                                $state ? (string)$state : ''
+                            )
                             ->mutateDehydratedStateUsing(function ($state) {
                                 if (!$state) return null;
                                 // Parse number, handling both dot and comma as decimal separator
@@ -203,7 +215,11 @@ class PromoResource extends Resource
                     ->limit(20),
                 Tables\Columns\TextColumn::make('trigger_quantity')
                     ->label('Qty')
-                    ->formatStateUsing(fn ($state, $record) => rtrim(rtrim(number_format(floatval($state), 3, ',', '.'), '0'), ',') . ' ' . $record->trigger_unit)
+                    ->formatStateUsing(fn ($state, $record) =>
+                        $record->trigger_unit === 'qty'
+                            ? number_format(floatval($state), 0, ',', '.') . ' ' . $record->trigger_unit
+                            : rtrim(rtrim(number_format(floatval($state), 3, ',', '.'), '0'), ',') . ' ' . $record->trigger_unit
+                    )
                     ->sortable(),
                 Tables\Columns\TextColumn::make('discount_type')
                     ->label('Tipe Diskon')
