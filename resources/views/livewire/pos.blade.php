@@ -17,17 +17,22 @@
                 }, 150);
             });
 
+            // Watch for search form toggle and auto focus
+            this.$watch('showSearchForm', (value) => {
+                if (value) {
+                    setTimeout(() => {
+                        const searchInput = document.querySelector('#search-product');
+                        if (searchInput) searchInput.focus();
+                    }, 150);
+                }
+            });
+
             // Keyboard shortcut: Ctrl+K or Cmd+K to toggle search form
             document.addEventListener('keydown', (e) => {
                 if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
                     e.preventDefault();
                     this.showSearchForm = !this.showSearchForm;
-                    if (this.showSearchForm) {
-                        setTimeout(() => {
-                            const searchInput = document.querySelector('#search-product');
-                            if (searchInput) searchInput.focus();
-                        }, 150);
-                    } else {
+                    if (!this.showSearchForm) {
                         // Fokus ke barcode input saat form ditutup
                         setTimeout(() => {
                             const barcodeInput = document.querySelector('#barcode');
@@ -143,7 +148,7 @@
                         <!-- Search Results Grid -->
                         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto">
                             @forelse ($products as $product)
-                                <button wire:click="addToOrder({{ $product->id }})" @click="showSearchForm = false"
+                                <button wire:click="addToOrder({{ $product->id }})" @click="showSearchForm = false; document.getElementById('search-product').value = '';"
                                     class="group relative overflow-hidden rounded-lg bg-white dark:bg-gray-700 border-2 border-purple-200 dark:border-purple-700 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200 p-2 sm:p-3 text-left">
                                     <!-- Product Image -->
                                     <div class="mb-2 h-16 sm:h-24 overflow-hidden rounded bg-gray-100 dark:bg-gray-600">
