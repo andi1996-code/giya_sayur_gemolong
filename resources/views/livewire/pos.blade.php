@@ -2,10 +2,16 @@
     <div class="max-w-[1600px] mx-auto -mt-6" x-data="{
         showSearchForm: false,
         showOrderSummary: false,
+        skipBarcodeFocus: false,
         init() {
             // Watch for any Livewire updates and refocus barcode input (only if search form is not open)
             this.$watch('$wire.order_items', () => {
                 setTimeout(() => {
+                    if (this.skipBarcodeFocus) {
+                        this.skipBarcodeFocus = false;
+                        return;
+                    }
+
                     // Jangan fokus ke barcode input jika form pencarian sedang terbuka
                     if (!this.showSearchForm) {
                         const input = document.querySelector('#barcode');
@@ -41,6 +47,28 @@
                                 barcodeInput.select();
                             }
                         }, 150);
+                    }
+                }
+
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+                    e.preventDefault();
+                    this.skipBarcodeFocus = true;
+                    const memberInput = document.querySelector('#member-input');
+                    if (memberInput) {
+                        memberInput.focus();
+                        memberInput.select();
+                    }
+                    setTimeout(() => {
+                        this.skipBarcodeFocus = false;
+                    }, 400);
+                }
+
+                if (e.key === 'End') {
+                    e.preventDefault();
+                    const cashInput = document.querySelector('#cash-received-input');
+                    if (cashInput) {
+                        cashInput.focus();
+                        cashInput.select();
                     }
                 }
             });
@@ -344,11 +372,11 @@
 
                     <!-- Keyboard Shortcut Info -->
                     <div class="mt-2 sm:mt-3 text-xs text-gray-500 dark:text-gray-400">
-                        💡 Tekan <kbd
-                            class="px-1.5 sm:px-2 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300 font-mono text-xs">Ctrl+K</kbd>
-                        (atau <kbd
-                            class="px-1.5 sm:px-2 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300 font-mono text-xs">Cmd+K</kbd>
-                        di Mac) untuk buka/tutup form pencarian
+                        💡 Shortcut:
+                        <kbd class="px-1.5 sm:px-2 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300 font-mono text-xs">Ctrl+K</kbd> Cari Produk |
+                        <kbd class="px-1.5 sm:px-2 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300 font-mono text-xs">Ctrl+M</kbd> Input Member |
+                        <kbd class="px-1.5 sm:px-2 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300 font-mono text-xs">End</kbd> Nominal Bayar |
+                        <kbd class="px-1.5 sm:px-2 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300 font-mono text-xs">Enter</kbd> (2x) Bayar
                     </div>
 
                     {{-- MODAL SCAN CAMERA --}}
@@ -656,6 +684,7 @@
                                                 <span class="text-gray-500 dark:text-gray-400 font-medium text-sm leading-none">Rp</span>
                                             </div>
                                             <input type="text" wire:model.live="cash_received"
+                                                id="cash-received-input"
                                                 x-data="{
                                                     formatCurrency(value) {
                                                         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
@@ -753,8 +782,43 @@
                                     class="flex-1 py-2 sm:py-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-medium text-sm sm:text-base rounded-xl transition-all duration-200 transform hover:scale-[0.98]">
                                     Batal
                                 </button>
-                                <button type="submit" @if ($is_cash && ($change < 0 || empty($cash_received))) disabled @endif
-                                    class="flex-1 py-2 sm:py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium text-sm sm:text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+                                <button type="submit" id="btn-bayar" @if ($is_cash && ($change < 0 || empty($cash_received))) disabled @endif
+                                    x-data="{ enterPressed: false }"
+                                    x-on:keydown.enter.window="
+                                        if (!$event.ctrlKey && !$event.metaKey && !$event.altKey && !$event.shiftKey) {
+                                            const activeEl = document.activeElement;
+                                            const isInputField = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT');
+
+                                            // Skip jika sedang di input field (kecuali cash-received-input)
+                                            if (isInputField && activeEl.id !== 'cash-received-input') {
+                                                return;
+                                            }
+
+                                            // Jika sedang di cash-received-input, fokus ke tombol bayar
+                                            if (activeEl.id === 'cash-received-input') {
+                                                $event.preventDefault();
+                                                $el.focus();
+                                                enterPressed = false;
+                                                return;
+                                            }
+
+                                            // Jika tombol bayar sudah fokus, submit form
+                                            if (document.activeElement === $el && enterPressed) {
+                                                // Enter kedua - eksekusi pembayaran
+                                                if (!$el.disabled) {
+                                                    $el.click();
+                                                }
+                                                enterPressed = false;
+                                            } else {
+                                                // Enter pertama - fokus ke tombol bayar
+                                                $event.preventDefault();
+                                                $el.focus();
+                                                enterPressed = true;
+                                            }
+                                        }
+                                    "
+                                    x-on:blur="enterPressed = false"
+                                    class="flex-1 py-2 sm:py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium text-sm sm:text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:ring-4 focus:ring-green-300 focus:outline-none">
                                     <svg class="w-4 sm:w-5 h-4 sm:h-5 inline-block mr-1 sm:mr-2" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -779,7 +843,7 @@
                 class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md transform scale-95 animate-modal-appear">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Masukkan Berat (gram)</h3>
-                    <input type="number" wire:model.live="weight_gram" min="0" placeholder="Contoh: 250"
+                    <input type="number" wire:model.live="weight_gram" wire:keydown.enter="confirmWeight" min="0" placeholder="Contoh: 250"
                         class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200" />
                     <!-- Quick Weight Buttons -->
                     <div class="flex gap-2 mt-2">
