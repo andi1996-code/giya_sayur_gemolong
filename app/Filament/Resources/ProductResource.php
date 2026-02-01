@@ -128,17 +128,19 @@ class ProductResource extends Resource implements HasShieldPermissions
                     ->image(),
                 Forms\Components\TextInput::make('stock')
                     ->label('Stok Reguler')
-                    ->helperText('Stok hanya dapat diisi/ditambah pada menejemen inventori atau supplier debt')
+                    ->helperText('Bisa disesuaikan langsung di halaman edit produk untuk koreksi cepat atau stok opname')
                     ->required()
                     ->numeric()
-                    ->readOnly()
+                    ->minValue(0)
+                    ->step(0.001)
                     ->default(0),
                 Forms\Components\TextInput::make('stok_kongsi')
                     ->label('Stok Kongsi (Titipan)')
-                    ->helperText('Stok titipan dari supplier')
+                    ->helperText('Stok titipan dapat diubah manual jika perlu sinkronisasi dengan supplier')
                     ->required()
                     ->numeric()
-                    ->readOnly()
+                    ->minValue(0)
+                    ->step(0.001)
                     ->default(0),
                 Forms\Components\TextInput::make('sku')
                     ->label('SKU')

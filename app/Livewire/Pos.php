@@ -592,12 +592,12 @@ class Pos extends Component
         }
 
         $pointSettings = \App\Models\PointSetting::first();
-        if (!$pointSettings) {
+        if (!$pointSettings || !isset($pointSettings->point_value) || (int)$pointSettings->point_value <= 0) {
             return 0;
         }
 
         // Maximum points that can be used (based on total price)
-        $maxPointsBasedOnPrice = floor(($this->total_price + $this->points_discount) / $pointSettings->point_value);
+        $maxPointsBasedOnPrice = floor(($this->total_price + $this->points_discount) / (int)$pointSettings->point_value);
 
         // Maximum points member has
         $maxPointsAvailable = $this->selected_member->total_points;
