@@ -400,7 +400,13 @@
                         </div>
                     @else
                         <div class="space-y-2 sm:space-y-4 pr-1 sm:pr-2 flex-grow overflow-y-auto">
-                            @foreach ($order_items as $item)
+                            @php
+                                // Sort items by added_at timestamp in descending order (newest first)
+                                $sortedItems = collect($order_items)->sortByDesc(function ($item) {
+                                    return $item['added_at'] ?? 0;
+                                });
+                            @endphp
+                            @foreach ($sortedItems as $item)
                                 <div
                                     class="bg-gray-50 dark:bg-gray-700 rounded-xl p-2 sm:p-4 flex items-start gap-2 sm:gap-4 shadow-sm hover:shadow-lg transition-all duration-300">
 
@@ -838,12 +844,15 @@
     <!-- Weight Modal -->
     @if ($showWeightModal)
         <div wire:ignore.self
-            class="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4"
+            x-data x-show="true">
             <div
                 class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md transform scale-95 animate-modal-appear">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Masukkan Berat (gram)</h3>
                     <input type="number" wire:model.live="weight_gram" wire:keydown.enter="confirmWeight" min="0" placeholder="Contoh: 250"
+                        id="weight-input"
+                        x-init="$nextTick(() => $el.focus())"
                         class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200" />
                     <!-- Quick Weight Buttons -->
                     <div class="flex gap-2 mt-2">

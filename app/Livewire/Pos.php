@@ -81,7 +81,14 @@ class Pos extends Component
         // Jika session 'orderItems' ada, maka ambil data nya dan simpan ke dalam property $order_items
         // Session 'orderItems' digunakan untuk menyimpan data order sementara sebelum di checkout
         if (session()->has('orderItems')) {
-            $this->order_items = session('orderItems');
+            $orderItems = session('orderItems');
+            // Ensure all items have required timestamp for sorting
+            foreach ($orderItems as &$item) {
+                if (!isset($item['added_at'])) {
+                    $item['added_at'] = microtime(true);
+                }
+            }
+            $this->order_items = $orderItems;
             $this->calculateTotal();
         }
 
@@ -275,6 +282,7 @@ class Pos extends Component
                     'total_profit' => $finalPrice - $product->cost_price,
                     'image_url' => $product->image,
                     'quantity' => 1,
+                    'added_at' => microtime(true),
                 ];
             }
 
@@ -335,6 +343,7 @@ class Pos extends Component
             'weight_kg' => $kilograms, // Store weight in kg for stock calculation
             'unit_price' => $unitPrice, // Store discounted unit price for display
             'original_unit_price' => $product->price_per_kg, // Store original unit price
+            'added_at' => microtime(true),
         ];
         // Reset modal state and recalculate
         $this->showWeightModal = false;
@@ -348,6 +357,12 @@ class Pos extends Component
 
     public function loadOrderItems($orderItems)
     {
+        // Ensure all items have required timestamp for sorting
+        foreach ($orderItems as &$item) {
+            if (!isset($item['added_at'])) {
+                $item['added_at'] = microtime(true);
+            }
+        }
         $this->order_items = $orderItems;
         session()->put('orderItems', $orderItems);
     }
