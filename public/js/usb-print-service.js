@@ -139,32 +139,34 @@ function formatReceiptData(data) {
     }
 
     receipt += '================================\n';
-    receipt += formatRow('Nama Barang', 'Qty', 'Harga') + '\n';
+    receipt += formatRow('Barang', 'Qty', 'Subtotal') + '\n';
     receipt += '--------------------------------\n';
 
     // Items
     let total = 0;
     if (data.items && data.items.length > 0) {
         data.items.forEach(item => {
-            let displayQty, displayPrice;
+            let displayQty, displayPrice, subtotal;
 
             if (item.weight && item.weight > 0) {
                 const weightValue = parseFloat(item.weight);
                 displayQty = weightValue + 'kg';
-                displayPrice = formatMoney(item.price || 0);
+                subtotal = weightValue * (item.price || 0);
+                displayPrice = formatMoney(subtotal);
             } else {
                 displayQty = item.quantity || 0;
-                displayPrice = formatMoney(item.price || 0);
+                subtotal = (item.quantity || 0) * (item.price || 0);
+                displayPrice = formatMoney(subtotal);
             }
 
             const productName = item.product?.name || item.product_name || 'Produk';
             receipt += formatRow(productName, displayQty, displayPrice) + '\n';
-            total += (item.quantity || 0) * (item.price || 0);
+            total += subtotal;
         });
     }
 
     receipt += '--------------------------------\n';
-    receipt += formatRow('Total', '', formatMoney(total)) + '\n';
+    receipt += formatRow('Total Belanja', '', formatMoney(total)) + '\n';
 
     // Promo discount
     if (data.order?.promo_discount && data.order.promo_discount > 0) {

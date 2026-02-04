@@ -28,7 +28,38 @@
                 if (value) {
                     setTimeout(() => {
                         const searchInput = document.querySelector('#search-product');
-                        if (searchInput) searchInput.focus();
+                        if (searchInput) {
+                            searchInput.focus();
+                            // Add Enter key listener for product selection from search input
+                            searchInput.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    const firstProductButton = document.querySelector('[data-product-button]');
+                                    if (firstProductButton) {
+                                        firstProductButton.click();
+                                    }
+                                }
+                                // Tab key: move focus to first product button
+                                if (e.key === 'Tab') {
+                                    const firstProductButton = document.querySelector('[data-product-button]');
+                                    if (firstProductButton) {
+                                        e.preventDefault();
+                                        firstProductButton.focus();
+                                    }
+                                }
+                            });
+                        }
+
+                        // Add Enter key listener to all product buttons
+                        const productButtons = document.querySelectorAll('[data-product-button]');
+                        productButtons.forEach(button => {
+                            button.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    button.click();
+                                }
+                            });
+                        });
                     }, 150);
                 }
             });
@@ -176,7 +207,7 @@
                         <!-- Search Results Grid -->
                         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto">
                             @forelse ($products as $product)
-                                <button wire:click="addToOrder({{ $product->id }})" @click="showSearchForm = false; document.getElementById('search-product').value = '';"
+                                <button data-product-button wire:click="addToOrder({{ $product->id }})" @click="showSearchForm = false; document.getElementById('search-product').value = '';"
                                     class="group relative overflow-hidden rounded-lg bg-white dark:bg-gray-700 border-2 border-purple-200 dark:border-purple-700 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200 p-2 sm:p-3 text-left">
                                     <!-- Product Image -->
                                     <div class="mb-2 h-16 sm:h-24 overflow-hidden rounded bg-gray-100 dark:bg-gray-600">
