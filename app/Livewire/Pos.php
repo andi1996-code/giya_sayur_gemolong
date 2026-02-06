@@ -673,7 +673,13 @@ class Pos extends Component
         $payment_method_id_temp = $this->payment_method_id;
         $cash_received_value = $this->is_cash ? $cashReceivedNumeric : $this->total_price;
 
-        if (session('orderItems') === null || count(session('orderItems')) == 0) {
+        // Sync session dari memory sebelum validasi, agar tidak terjadi desinkronisasi
+        if (!empty($this->order_items)) {
+            session()->put('orderItems', $this->order_items);
+        }
+
+        // Gunakan $this->order_items sebagai source of truth utama
+        if (empty($this->order_items)) {
             Notification::make()
                 ->title('Keranjang kosong')
                 ->danger()

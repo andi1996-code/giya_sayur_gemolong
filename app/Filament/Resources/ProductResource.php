@@ -127,12 +127,12 @@ class ProductResource extends Resource implements HasShieldPermissions
                     ->helperText('jika tidak diisi akan diisi foto default')
                     ->image(),
                 Forms\Components\TextInput::make('stock')
-                    ->label('Stok Reguler')
+                    ->label('Stok Reguler (Kg/Unit)')
                     ->helperText('Bisa disesuaikan langsung di halaman edit produk untuk koreksi cepat atau stok opname')
                     ->required()
                     ->numeric()
                     ->minValue(0)
-                    ->step(0.001)
+                    ->step(0.1)
                     ->default(0),
                 Forms\Components\TextInput::make('stok_kongsi')
                     ->label('Stok Kongsi (Titipan)')
@@ -140,7 +140,7 @@ class ProductResource extends Resource implements HasShieldPermissions
                     ->required()
                     ->numeric()
                     ->minValue(0)
-                    ->step(0.001)
+                    ->step(0.1)
                     ->default(0),
                 Forms\Components\TextInput::make('sku')
                     ->label('SKU')
@@ -206,17 +206,18 @@ class ProductResource extends Resource implements HasShieldPermissions
                     ->label('Gambar')
                     ->circular(),
                 Tables\Columns\TextColumn::make('stock')
-                    ->label('Stok Reguler')
-                    ->numeric()
+                    ->label('Stok Reguler Kg/Unit')
+                    ->formatStateUsing(fn($state) => $state !== null ? rtrim(rtrim(number_format($state, 1, ',', '.'), '0'), ',') : '0')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('stok_kongsi')
                     ->label('Stok Kongsi')
-                    ->numeric()
+                    ->formatStateUsing(fn($state) => $state !== null ? rtrim(rtrim(number_format($state, 1, ',', '.'), '0'), ',') : '0')
                     ->color('warning')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total_stock')
                     ->label('Total Stok')
                     ->getStateUsing(fn($record) => ($record->stock ?? 0) + ($record->stok_kongsi ?? 0))
+                    ->formatStateUsing(fn($state) => rtrim(rtrim(number_format($state, 1, ',', '.'), '0'), ','))
                     ->color('primary')
                     ->weight('bold')
                     ->sortable(false),

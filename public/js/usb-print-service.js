@@ -149,9 +149,11 @@ function formatReceiptData(data) {
             let displayQty, displayPrice, subtotal;
 
             if (item.weight && item.weight > 0) {
+                // item.price sudah merupakan harga total (price_per_kg * berat)
+                // JANGAN kalikan lagi dengan berat — langsung pakai item.price
                 const weightValue = parseFloat(item.weight);
                 displayQty = weightValue + 'kg';
-                subtotal = weightValue * (item.price || 0);
+                subtotal = item.price || 0;
                 displayPrice = formatMoney(subtotal);
             } else {
                 displayQty = item.quantity || 0;

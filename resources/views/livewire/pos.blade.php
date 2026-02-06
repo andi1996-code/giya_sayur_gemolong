@@ -209,8 +209,8 @@
                             @forelse ($products as $product)
                                 <button data-product-button wire:click="addToOrder({{ $product->id }})" @click="showSearchForm = false; document.getElementById('search-product').value = '';"
                                     class="group relative overflow-hidden rounded-lg bg-white dark:bg-gray-700 border-2 border-purple-200 dark:border-purple-700 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200 p-2 sm:p-3 text-left">
-                                    <!-- Product Image -->
-                                    <div class="mb-2 h-16 sm:h-24 overflow-hidden rounded bg-gray-100 dark:bg-gray-600">
+                                    <!-- Product Image (Hidden) -->
+                                    <div class="mb-2 h-16 sm:h-24 overflow-hidden rounded bg-gray-100 dark:bg-gray-600 hidden">
                                         @if ($product->image && file_exists(public_path('storage/' . $product->image)))
                                             <img src="{{ asset('storage/' . $product->image) }}"
                                                 alt="{{ $product->name }}"
@@ -441,7 +441,7 @@
                                 <div
                                     class="bg-gray-50 dark:bg-gray-700 rounded-xl p-2 sm:p-4 flex items-start gap-2 sm:gap-4 shadow-sm hover:shadow-lg transition-all duration-300">
 
-                                    <div class="flex-shrink-0">
+                                    <div class="flex-shrink-0 hidden">
                                         <img src="{{ asset('storage/' . $item['image_url']) }}"
                                             alt="{{ $item['name'] }}"
                                             class="w-14 sm:w-20 h-14 sm:h-20 object-cover rounded-lg border border-gray-200 dark:border-gray-600">

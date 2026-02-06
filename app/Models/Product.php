@@ -142,9 +142,9 @@ class Product extends Model
         $kongsiStock = $this->stok_kongsi ?? 0;
         $totalStock = $regularStock + $kongsiStock;
 
-        // Format dengan 3 desimal tapi hilangkan trailing zeros
+        // Format dengan 1 desimal tapi hilangkan trailing zeros
         $formatStock = function($value) {
-            return rtrim(rtrim(number_format($value, 3, ',', '.'), '0'), ',');
+            return rtrim(rtrim(number_format($value, 1, ',', '.'), '0'), ',');
         };
 
         return $formatStock($totalStock) . ' kg (R:' . $formatStock($regularStock) . ' K:' . $formatStock($kongsiStock) . ')';
@@ -157,8 +157,8 @@ class Product extends Model
     {
         $totalStock = $this->getTotalAvailableStock();
 
-        // Format dengan 3 desimal tapi hilangkan trailing zeros
-        return rtrim(rtrim(number_format($totalStock, 3, '.', ''), '0'), '.');
+        // Format dengan 1 desimal tapi hilangkan trailing zeros
+        return rtrim(rtrim(number_format($totalStock, 1, '.', ''), '0'), '.');
     }
 
     /**
