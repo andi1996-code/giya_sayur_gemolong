@@ -96,16 +96,14 @@ function formatReceiptData(data) {
 
     // Initialize printer
     receipt += ESC + '@'; // Reset printer
-
-    // Header - Center alignment with ESC and manual padding
-    receipt += ESC + 'a' + '\x01'; // Center alignment command
+    receipt += ESC + 'a' + '\x01'; // Center alignment
     receipt += ESC + '!' + '\x10'; // Bold and large text
-    receipt += centerText(data.store?.name || 'TOKO') + '\n';
+    receipt += (data.store?.name || 'TOKO') + '\n';
     receipt += ESC + '!' + '\x00'; // Normal text
-    receipt += centerText(data.store?.address || '') + '\n';
-    receipt += centerText('Telp: ' + (data.store?.phone || '')) + '\n';
-    receipt += centerText('================================') + '\n';
-    receipt += ESC + 'a' + '\x00'; // Back to left alignment
+    receipt += (data.store?.address || '') + '\n';
+    receipt += 'Telp: ' + (data.store?.phone || '') + '\n';
+    receipt += '================================\n';
+    receipt += ESC + 'a' + '\x00'; // Left alignment
 
     // Transaction details
     receipt += 'Kode Transaksi: ' + (data.order?.transaction_number || '') + '\n';
@@ -181,34 +179,32 @@ function formatReceiptData(data) {
     // Payment details
     receipt += formatRow('Nominal Bayar', '', formatMoney(data.order?.cash_received || 0)) + '\n';
     receipt += formatRow('Kembalian', '', formatMoney(data.order?.change || 0)) + '\n';
+    receipt += '================================\n';
+    receipt += ESC + 'a' + '\x01'; // Center alignment
 
-    // Center alignment for footer
-    receipt += ESC + 'a' + '\x01'; // Center alignment command
-    receipt += centerText('================================') + '\n';
-
-    // Footer - Each line centered with ESC alignment
+    // Footer
     if (data.store?.receipt_footer_line1) {
-        receipt += centerText(data.store.receipt_footer_line1) + '\n';
+        receipt += data.store.receipt_footer_line1 + '\n';
     }
     if (data.store?.receipt_footer_line2) {
-        receipt += centerText(data.store.receipt_footer_line2) + '\n';
+        receipt += data.store.receipt_footer_line2 + '\n';
     }
     if (data.store?.receipt_footer_line3) {
-        receipt += centerText(data.store.receipt_footer_line3) + '\n';
+        receipt += data.store.receipt_footer_line3 + '\n';
     }
 
     // Footer note
     if (data.store?.receipt_footer_note) {
-        receipt += centerText(data.store.receipt_footer_note) + '\n';
+        receipt += data.store.receipt_footer_note + '\n';
     }
 
     // Thank you message
     if (data.store?.show_footer_thank_you !== false) {
-        receipt += centerText('*** TERIMA KASIH ***') + '\n';
+        receipt += '*** TERIMA KASIH ***\n';
     }
 
-    receipt += centerText('================================');
-    receipt += ESC + 'a' + '\x00'; // Back to left alignment
+    receipt += '================================';
+    receipt += ESC + 'a' + '\x00'; // Left alignment
     receipt += "\x1B\x70\x00\x3C\xFF"; // Buka cash drawer
 
     return receipt;
@@ -290,23 +286,6 @@ async function printReceiptUSB(receiptData, printerName = null) {
 
         return false;
     }
-}
-
-/**
- * Helper function to center text with padding (for Epson TM-T82)
- * Standard width: 32 characters for 58mm printer
- */
-function centerText(text) {
-    const width = 32; // Standard 58mm thermal printer width
-    const trimmedText = String(text || '').trim();
-
-    if (trimmedText.length >= width) {
-        return trimmedText;
-    }
-
-    const spaces = Math.floor((width - trimmedText.length) / 2);
-    const padding = ' '.repeat(Math.max(0, spaces));
-    return padding + trimmedText;
 }
 
 /**
